@@ -1,3 +1,5 @@
+# script that computes the sentiment for the terms that do not appear in the file AFINN-111.txt.
+
 import json
 import sys
 
@@ -36,14 +38,3 @@ def main():
             
 if __name__ == '__main__':
     main()
-
-# script that computes the sentiment for the terms that do not appear in the file AFINN-111.txt.
-# We will run your script on a file that contains strongly positive and strongly
-# negative tweets and verify that the non-sentiment-carrying terms in the
-# strongly positive tweets are assigned a higher score than the non-sentiment-carrying
-# terms in negative tweets. Your scores need not (and likely will not) exactly match
-# any specific solution.
-
-# First, get a list of all non sentiment carrying tweets
-# Then assign a nummber to it by going through all tweets that contain the word and then checking that tweet's sentiments
-# Create a dictionary that has these non sentiment carrying words and change their key, which is their score

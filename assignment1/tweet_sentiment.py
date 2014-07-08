@@ -13,8 +13,8 @@ def main():
         if 'text' in json.loads(line): # if object contains key 'text' field
             tweetText = json.loads(line)['text'].lower().encode('utf8')
             sentimentScore = 0
-            for key in scores: # iterate over scores 
-                if key in tweetText: #  if tweetText contains term, incremement sentiment score
+            for key in scores:
+                if key in tweetText:
                     sentimentScore += scores[key]        
             sentiments.append(sentimentScore)
         else: #set sentiment score for line to 0 for lines that do not contain tweet data
