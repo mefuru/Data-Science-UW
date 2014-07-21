@@ -84,26 +84,49 @@
 --      WHERE A.col_num = B.row_num
 --      GROUP BY A.row_num, B.col_num
 -- )
--- WHERE row_num = 2 and col_num = 3
--- ;
+-- WHERE row_num = 2 and col_num = 3;
 
 -- 3.
 -- (h) similarity matrix: Write a query to compute the similarity matrix DDT. (Hint: The transpose is trivial -- just join on columns to columns instead of columns to rows.) 
 
 -- What to turn in: On the assignment page, enter the similarity of the two documents '10080_txt_crude' and '17035_txt_earn'.
 
--- Compute transpose
--- Do matrix multiplication
+-- Compute transpose - join on columns to columns instead of columns to rows
+-- Do matrix multiplication as per 2g
 -- Find similarity between 10080_txt_crude' and '17035_txt_earn'
+-- A.docid = '10080_txt_crude' and B.docid = '17035_txt_earn'
 
--- SELECT val
+-- SELECT similarity
 -- FROM (
---      SELECT A.row_num, B.col_num, SUM(A.value*B.value) as val
---      FROM A,B
---      WHERE A.col_num = B.row_num
---      GROUP BY A.row_num, B.col_num
+--        SELECT A.docid as firstDoc, B.docid as secondDoc, sum(A.count*B.count) as similarity
+--        FROM frequency as A, frequency as B
+--        WHERE A.term=B.term
+--        GROUP BY A.docid, B.docid
 -- )
--- WHERE row_num = 2 and col_num = 3
--- ;
+-- WHERE firstDoc = '10080_txt_crude' and secondDoc = '17035_txt_earn';
 
-PRAGMA table_info(frequency);
+
+-- (i) Find the best matching document to the keyword query "washington taxes treasury".
+-- You can add this set of keywords to the document corpus with a union of scalar queries:
+
+
+SELECT similarity
+FROM (
+     SELECT B.docid as secondDoc, sum(A.count*B.count) as similarity
+     FROM 
+        (SELECT *
+        FROM frequency
+        UNION SELECT 'q' as docid, 'washington' as term, 1 as count 
+        UNION SELECT 'q' as docid, 'taxes' as term, 1 as count
+        UNION SELECT 'q' as docid, 'treasury' as term, 1 as count) as A,
+        (SELECT *
+        FROM frequency
+        UNION SELECT 'q' as docid, 'washington' as term, 1 as count 
+        UNION SELECT 'q' as docid, 'taxes' as term, 1 as count
+        UNION SELECT 'q' as docid, 'treasury' as term, 1 as count) as B
+     WHERE A.term=B.term and A.docid='q'
+     GROUP BY B.docid
+)
+ORDER BY -similarity
+LIMIT 1
+;
